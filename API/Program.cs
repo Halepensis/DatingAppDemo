@@ -1,5 +1,10 @@
+using System.Text;
 using API.Data;
+using API.Interfaces;
+using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +16,36 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddCors();
-var app = builder.Build();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    var tokenKey = builder.Configuration["TokenKey"]
+                        ?? throw new Exception("Token key not found - Program.cs");
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
 
+                    };
+
+                });
+
+var app = builder.Build();
+app.UseHttpsRedirection();
 // Configure the HTTP request pipline
-app.UseCors(options=>
+app.UseCors(options =>
     options.AllowAnyHeader()
     .AllowAnyMethod()
-    .WithOrigins("http://localhost:4200","https://localhost:4200"));
+    .WithOrigins("http://localhost:4200", "https://localhost:4200"));
+
+//Tienen que estar por este orden
+// 1º Sabe quien eres
+// 2º Sabe si puedes entrar 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
