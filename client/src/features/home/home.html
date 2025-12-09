@@ -1,7 +1,6 @@
 <div class="hero bg-base-200 min-h-screen">
+  @if (!registerMode()) {
   <div class="hero-content text-center">
-    @if (!registerMode()) {
-
     <div class="flex flex-col items-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -20,11 +19,10 @@
         <button class="btn btn-info btn-lg">Learn more</button>
       </div>
     </div>
-
-    }@else {
-    <div class="text-3xl text-center flex justify-center">
-      <app-register (cancelRegister)="showRegister($event)" />
-    </div>
-    }
   </div>
+  }@else {
+  <div class="text-3xl text-center flex justify-center">
+    <app-register (cancelRegister)="showRegister($event)" />
+  </div>
+  }
 </div>
