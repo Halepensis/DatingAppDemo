@@ -8,10 +8,11 @@ namespace API.Controllers
     [Authorize]
     public class MembersController(IMemberRepository memberRepository) : BasicApiController
     {
+
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers()
         {
-            return Ok(memberRepository.GetMembersAsync());
+            return Ok(await memberRepository.GetMembersAsync());
         }
 
         [HttpGet("{id}")] //localhost:5001/api/members/bob-id
