@@ -31,6 +31,9 @@
       <a routerLink="/messages" routerLinkActive="text-accent">Messages</a>
       }
     </nav>
+    @if (busyService.busyRequestCount() >0) {
+    <span class="loading loading-spinner text-accent"></span>
+    }
     <div class="flex align-middle ml-auto gap-3">
       <div class="dropdown mr-5 dropdown-end">
         <button
@@ -79,7 +82,7 @@
           class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
         >
           <li><a (click)="logout()">Logout</a></li>
-          <li><a>Edit profile</a></li>
+          <li><a routerLink="/members/{{ user.id }}">Edit profile</a></li>
         </ul>
       </div>
 
