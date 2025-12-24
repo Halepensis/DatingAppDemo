@@ -44,6 +44,6 @@ export class MemberService {
   }
 
   deletePhoto(photoId: number) {
-    return this.http.delete(this.baseUrl + 'delete-photo/' + photoId);
+    return this.http.delete(this.baseUrl + 'members/sdelete-photo/' + photoId);
   }
 }
